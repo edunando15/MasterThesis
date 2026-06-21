@@ -1,0 +1,49 @@
+Prefices
+{
+    rdf : http://www.w3.org/1999/02/22-rdf-syntax-ns#
+    bop : https://w3id.org/bop#
+    bot : https://w3id.org/bot#
+    sosa : http://www.w3.org/ns/sosa/
+    iotpo : https://fhnw.ch/iotpo#
+	thingsboard: https://fhnw.ch/thingsboard#
+}
+
+Axioms
+{
+}
+
+Rules
+{
+    Id: S1_Sensor_Mapping
+    s <rdf:type> <bop:Sensor>
+    -------------------------------
+    s <rdf:type> <sosa:Sensor>
+    s <rdf:type> <iotpo:Device>
+
+    Id: S2_Actuator_Mapping
+    a <rdf:type> <bop:Actuator>
+    -------------------------------
+    a <rdf:type> <iotpo:Device>
+
+    Id: S3_SubSensor_Mapping
+	multiSensor <rdf:type> <bop:Sensor>
+	subSensor <rdf:type> <bop:Sensor>
+    multiSensor <bop:hasSubSensor> subSensor
+    -------------------------------
+    multiSensor <iotpo:hasSubDevice> subSensor
+	
+	Id: S4_Zone_to_Asset
+	zone <rdf:type> <bot:Zone>
+	-------------------------------
+	zone <rdf:type> <thingsboard:Asset>
+	
+	Id: S5_containsZone_to_containsAsset
+	zone1 <bot:containsZone> zone2
+	-------------------------------
+	zone1 <thingsboard:containsAsset> zone2
+	
+	Id: S6_containsElement_to_containsDevice
+	zone <bot:containsElement> device
+	-------------------------------
+	zone <thingsboard:containsDevice> device
+}

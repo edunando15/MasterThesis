@@ -1,0 +1,102 @@
+@prefix : <http://www.semanticweb.org/owl/owlapi/turtle#> .
+@prefix bop: <https://w3id.org/bop#> .
+@prefix bot: <https://w3id.org/bot#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sosa: <http://www.w3.org/ns/sosa/> .
+@prefix iotpo: <https://fhnw.ch/iotpo#> .
+@base <https://fhnw.ch/iotpo#> .
+
+<https://fhnw.ch/iotpo#> rdf:type owl:Ontology ;
+                         owl:imports <http://www.w3.org/ns/sosa/> ,
+                                     <https://w3id.org/bop> ,
+                                     <https://w3id.org/bot> .
+
+#################################################################
+#    Annotation properties
+#################################################################
+
+<http://swrl.stanford.edu/ontologies/3.3/swrla.owl#isRuleEnabled> rdf:type owl:AnnotationProperty .
+
+#################################################################
+#    Object Properties
+#################################################################
+
+iotpo:dispatchedBy rdf:type owl:ObjectProperty ;
+                   rdfs:domain iotpo:Message ;
+                   rdfs:range iotpo:Device .
+
+iotpo:hasObservation rdf:type owl:ObjectProperty ;
+                     owl:inverseOf iotpo:isObservationContainedIn ;
+                     rdfs:domain iotpo:Message ;
+                     rdfs:range sosa:Observation .
+					 
+###  https://fhnw.ch/iotpo#hasSubDevice
+iotpo:hasSubDevice rdf:type owl:ObjectProperty ;
+                   rdfs:domain iotpo:Device ;
+                   rdfs:range iotpo:Device .
+
+iotpo:isObservationContainedIn rdf:type owl:ObjectProperty ,
+                                        owl:FunctionalProperty ;
+                               rdfs:domain sosa:Observation ;
+                               rdfs:range iotpo:Message .
+
+iotpo:isRepresentedBy rdf:type owl:ObjectProperty ;
+                      owl:inverseOf iotpo:represents ;
+                      rdfs:domain sosa:Sensor ;
+                      rdfs:range iotpo:Device .
+
+iotpo:receivedVia rdf:type owl:ObjectProperty ;
+                  rdfs:domain iotpo:Message ;
+                  rdfs:range iotpo:Channel .
+
+iotpo:represents rdf:type owl:ObjectProperty ;
+                 rdfs:domain iotpo:Device ;
+                 rdfs:range sosa:Sensor .
+
+#################################################################
+#    Data properties
+#################################################################
+
+iotpo:hasContent rdf:type owl:DatatypeProperty ;
+                 rdfs:domain iotpo:Message ;
+                 rdfs:range xsd:string .
+
+iotpo:hasFormat rdf:type owl:DatatypeProperty ;
+                rdfs:domain iotpo:Message ;
+                rdfs:range xsd:string .
+
+iotpo:hasProtocol rdf:type owl:DatatypeProperty ;
+                  rdfs:domain iotpo:Channel ;
+                  rdfs:range xsd:string .
+
+iotpo:hasType rdf:type owl:DatatypeProperty ;
+              rdfs:domain iotpo:Message ;
+              rdfs:range xsd:string .
+
+iotpo:requiresAuthentication rdf:type owl:DatatypeProperty ;
+                             rdfs:domain iotpo:Channel ;
+                             rdfs:range xsd:boolean .
+
+#################################################################
+#    Classes
+#################################################################
+
+sosa:Observation rdfs:subClassOf [ rdf:type owl:Restriction ;
+                                   owl:onProperty iotpo:isObservationContainedIn ;
+                                   owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                   owl:onClass iotpo:Message
+                                 ] .
+
+iotpo:Channel rdf:type owl:Class .
+
+iotpo:Device rdf:type owl:Class .
+
+iotpo:Message rdf:type owl:Class ;
+              rdfs:subClassOf [ rdf:type owl:Restriction ;
+                                owl:onProperty iotpo:hasObservation ;
+                                owl:someValuesFrom sosa:Observation
+                              ] .

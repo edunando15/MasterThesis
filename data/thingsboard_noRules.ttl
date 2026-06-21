@@ -1,0 +1,206 @@
+@prefix : <https://fhnw.ch/thingsboard#> .
+@prefix thingsboard: <https://fhnw.ch/thingsboard#> .
+@prefix bop: <https://w3id.org/bop#> .
+@prefix bot: <https://w3id.org/bot#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix iotpo: <https://fhnw.ch/iotpo#> .
+@base <https://fhnw.ch/thingsboard#> .
+
+<https://fhnw.ch/thingsboard> rdf:type owl:Ontology ;
+                              owl:imports <http://www.w3.org/ns/sosa/> ,
+                                          <https://w3id.org/bop> ,
+                                          <https://w3id.org/bot> ,
+                                          <https://fhnw.ch/iotpo> .
+
+#################################################################
+#    Annotation properties
+#################################################################
+
+###  http://swrl.stanford.edu/ontologies/3.3/swrla.owl#isRuleEnabled
+<http://swrl.stanford.edu/ontologies/3.3/swrla.owl#isRuleEnabled> rdf:type owl:AnnotationProperty .
+
+
+#################################################################
+#    Object Properties
+#################################################################
+
+###  https://fhnw.ch/iotpo#dispatchedBy
+iotpo:dispatchedBy rdf:type owl:ObjectProperty .
+
+
+###  https://fhnw.ch/thingsboard#containsAsset
+thingsboard:containsAsset rdf:type owl:ObjectProperty ;
+                 rdfs:domain thingsboard:Asset ;
+                 rdfs:range thingsboard:Asset ;
+                 rdfs:comment "A directed relation from an Asset to a child Asset." ;
+                 rdfs:label "contains asset" .
+
+
+###  https://fhnw.ch/thingsboard#containsDevice
+thingsboard:containsDevice rdf:type owl:ObjectProperty ;
+                  rdfs:domain thingsboard:Asset ;
+                  rdfs:range thingsboard:Device ;
+                  rdfs:comment "A directed relation from an Asset to a child Device." ;
+                  rdfs:label "contains device" .
+
+
+###  https://fhnw.ch/thingsboard#hasProfile
+thingsboard:hasProfile rdf:type owl:ObjectProperty ;
+              rdfs:domain thingsboard:Device ;
+              rdfs:range thingsboard:DeviceProfile ;
+              rdfs:comment "Links a device to its configuration profile." ;
+              rdfs:label "has profile" .
+
+
+###  https://fhnw.ch/thingsboard#postsTelemetry
+thingsboard:postsTelemetry rdf:type owl:ObjectProperty ;
+                  rdfs:subPropertyOf iotpo:dispatchedBy ;
+                  owl:inverseOf thingsboard:telemetryPostedBy ;
+                  rdfs:domain thingsboard:Device ;
+                  rdfs:range thingsboard:Telemetry ;
+                  rdfs:label "posts telemetry" .
+
+
+###  https://fhnw.ch/thingsboard#telemetryPostedBy
+thingsboard:telemetryPostedBy rdf:type owl:ObjectProperty ;
+                     rdfs:domain thingsboard:Telemetry ;
+                     rdfs:range thingsboard:Device .
+
+
+#################################################################
+#    Data properties
+#################################################################
+
+###  https://fhnw.ch/thingsboard#hasDefaultRuleChainId
+thingsboard:hasDefaultRuleChainId rdf:type owl:DatatypeProperty ;
+                         rdfs:domain thingsboard:DeviceProfile ;
+                         rdfs:range xsd:string ;
+                         rdfs:comment "The UUID string mapping to the root rule chain for this profile." ;
+                         rdfs:label "defaultRuleChainId" .
+
+
+###  https://fhnw.ch/thingsboard#hasKey
+thingsboard:hasKey rdf:type owl:DatatypeProperty ;
+          rdfs:domain thingsboard:Telemetry ;
+          rdfs:range xsd:string ;
+          rdfs:comment "The telemetry data key mapping to the JSON key inside the 'values' object." ;
+          rdfs:label "key" .
+
+
+###  https://fhnw.ch/thingsboard#hasLabel
+thingsboard:hasLabel rdf:type owl:DatatypeProperty ;
+            rdfs:domain [ rdf:type owl:Class ;
+                          owl:unionOf ( thingsboard:Asset
+                                        thingsboard:Device
+                                      )
+                        ] ;
+            rdfs:range xsd:string ;
+            rdfs:label "label" .
+
+
+###  https://fhnw.ch/thingsboard#hasName
+thingsboard:hasName rdf:type owl:DatatypeProperty ;
+           rdfs:domain [ rdf:type owl:Class ;
+                         owl:unionOf ( thingsboard:Asset
+                                       thingsboard:Device
+                                       thingsboard:DeviceProfile
+                                     )
+                       ] ;
+           rdfs:range xsd:string ;
+           rdfs:label "name" .
+
+
+###  https://fhnw.ch/thingsboard#hasProvisionType
+thingsboard:hasProvisionType rdf:type owl:DatatypeProperty ;
+                    rdfs:domain thingsboard:DeviceProfile ;
+                    rdfs:range xsd:string ;
+                    rdfs:comment "Mapping to the API field (e.g., DISABLED, ALLOW_CREATE_NEW_DEVICES, CHECK_PRE_PROVISIONED_DEVICES)." ;
+                    rdfs:label "provisionType" .
+
+
+###  https://fhnw.ch/thingsboard#hasTimestamp
+thingsboard:hasTimestamp rdf:type owl:DatatypeProperty ;
+                rdfs:domain thingsboard:Telemetry ;
+                rdfs:range xsd:long ;
+                rdfs:comment "Unix epoch timestamp in milliseconds, mapping to the 'ts' field in the ThingsBoard telemetry JSON payload." ;
+                rdfs:label "ts" .
+
+
+###  https://fhnw.ch/thingsboard#hasTransportType
+thingsboard:hasTransportType rdf:type owl:DatatypeProperty ;
+                    rdfs:domain thingsboard:TransportProfile ;
+                    rdfs:range xsd:string ;
+                    rdfs:comment "Mapping to the transportConfiguration type field (e.g., DEFAULT, MQTT, COAP, LWM2M)." ;
+                    rdfs:label "transportType" .
+
+
+###  https://fhnw.ch/thingsboard#hasType
+thingsboard:hasType rdf:type owl:DatatypeProperty ;
+           rdfs:domain [ rdf:type owl:Class ;
+                         owl:unionOf ( thingsboard:Asset
+                                       thingsboard:Device
+                                     )
+                       ] ;
+           rdfs:range xsd:string ;
+           rdfs:label "type" .
+
+
+###  https://fhnw.ch/thingsboard#hasValue
+thingsboard:hasValue rdf:type owl:DatatypeProperty ;
+            rdfs:domain thingsboard:Telemetry ;
+            rdfs:comment "The telemetry data value. Range is left undefined as ThingsBoard accepts String, Double, Boolean, and Long." ;
+            rdfs:label "value" .
+
+
+#################################################################
+#    Classes
+#################################################################
+
+###  https://fhnw.ch/iotpo#Channel
+iotpo:Channel rdf:type owl:Class .
+
+
+###  https://fhnw.ch/iotpo#Device
+iotpo:Device rdf:type owl:Class .
+
+
+###  https://fhnw.ch/iotpo#Message
+iotpo:Message rdf:type owl:Class .
+
+
+###  https://fhnw.ch/thingsboard#Asset
+thingsboard:Asset rdf:type owl:Class ;
+         rdfs:comment "A ThingsBoard Asset entity. Can be linked to multiple parent entities." ;
+         rdfs:label "Asset" .
+
+
+###  https://fhnw.ch/thingsboard#Device
+thingsboard:Device rdf:type owl:Class ;
+          rdfs:subClassOf iotpo:Device ;
+          rdfs:comment "A ThingsBoard Device entity. Can be linked to multiple parent entities." ;
+          rdfs:label "Device" .
+
+
+###  https://fhnw.ch/thingsboard#DeviceProfile
+thingsboard:DeviceProfile rdf:type owl:Class ;
+                 rdfs:subClassOf iotpo:Channel ;
+                 rdfs:comment "Defines standard behaviour, rule chains, and provisioning logic for a group of Devices." ;
+                 rdfs:label "Device Profile" .
+
+
+###  https://fhnw.ch/thingsboard#Telemetry
+thingsboard:Telemetry rdf:type owl:Class ;
+             rdfs:subClassOf iotpo:Message ;
+             rdfs:comment "ThingsBoard time-series data message." ;
+             rdfs:label "Telemetry" .
+
+
+###  https://fhnw.ch/thingsboard#TransportProfile
+thingsboard:TransportProfile rdf:type owl:Class ;
+                    rdfs:subClassOf thingsboard:DeviceProfile ;
+                    rdfs:comment "Specific protocol configuration (e.g., MQTT, CoAP) nested within a Device Profile's transportConfiguration." ;
+                    rdfs:label "Transport Profile" .
