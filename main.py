@@ -1,16 +1,20 @@
-# This is a sample Python script.
+import os
+from adapters.thingsboardAdapter import ThingsboardAdapter as ThingsboardAdapter
+from extractors.entityExtractor import EntityExtractor
+from deployment.thingsboardDeployer import ThingsboardDeployer
+from dotenv import load_dotenv
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+load_dotenv()
+graphdb_url = os.getenv("GRAPHDB_URL")
+graphdb_repository = os.getenv("GRAPHDB_REPOSITORY")
+thingsboard_username = os.getenv("THINGSBOARD_USERNAME")
+thingsboard_password = os.getenv("THINGSBOARD_PASSWORD")
+tb_url = os.getenv("THINGSBOARD_URL")
 
+extractor = EntityExtractor(graphdb_url, graphdb_repository)
+extracted_entities = extractor.extract_entities_relationships()
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+adapter = ThingsboardAdapter(tb_url)
+deployer = ThingsboardDeployer(adapter, extracted_entities)
 
-
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+deployer.deploy(thingsboard_username, thingsboard_password)
