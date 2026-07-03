@@ -12,6 +12,7 @@ class IDeployer(ABC):
         self.adapter = adapter
         self.assets = extracted_entities.get("assets", [])
         self.devices = extracted_entities.get("devices", [])
+        self.observations = extracted_entities.get("observations", [])
         self.relationships = extracted_entities.get("relationships", [])
         self.devices_ids = []
         self.assets_ids = []

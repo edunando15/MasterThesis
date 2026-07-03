@@ -22,7 +22,7 @@ class IAdapter(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def add_device(self, device: Any, parent: Any = None) -> str:
+    def add_device(self, device: Any, description: str = None) -> str:
         raise NotImplementedError
 
     @abstractmethod
