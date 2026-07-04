@@ -54,12 +54,13 @@ class ThingsboardDeployer(IDeployer):
             if not uri or uri in ignored_devices:
                 continue
 
+            has_id = device.get("hasId")
             observation_uri = self._find_observation_for_device(uri)
             description = None
             if observation_uri:
                 description = observation_uri
 
-            tb_id = self.adapter.add_device(uri, description)
+            tb_id = self.adapter.add_device(uri, description, has_id)
             if tb_id:
                 self.devices_ids.append(tb_id)
                 self._entity_registry[uri] = {"id": tb_id, "type": Type.DEVICE}

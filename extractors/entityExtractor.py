@@ -10,16 +10,17 @@ class EntityExtractor(IIoTPlatformExtractor):
 
     def __init__(self, graphdb_url: str, repository: str):
         super().__init__(graphdb_url, repository)
-        self.zone_types = ["bot:Zone", "bot:Site", "bot:Building", "bot:Storey", "bot:Space"]
+        self.zone_types = ["thingsboard:Asset"]
         self.device_types = ["iotpo:Device"]
         self.observation_types = ["sosa:Observation"]
-        self.structural_relations = ["bot:hasBuilding", "bot:hasStorey", "bot:hasSpace"]
+        self.structural_relations = ["thingsboard:containsAsset"]
 
         self.relationships_filter = [
-                "bot:containsElement",
+                "thingsboard:containsDevice",
                 "bop:hasSubSensor",
                 "sosa:madeBySensor",
                 "iotpo:isAggregatedSensor",
+                "iotpo:hasId",
             ]
 
         self.raw_results: List[Dict[str, Any]] = []
@@ -42,14 +43,16 @@ class EntityExtractor(IIoTPlatformExtractor):
                 {self._build_prefix("IOTPO")}
                 {self._build_prefix("BOP")} 
                 {self._build_prefix("SOSA")}
+                {self._build_prefix("THINGSBOARD")}
 
-                SELECT ?subject ?type ?relation ?object ?isAggregatedSensor
+                SELECT ?subject ?type ?relation ?object ?isAggregatedSensor ?hasId
                 WHERE {{
                     {{
                         # Extract all target entities
                         ?subject a ?type .
                         FILTER(?type IN ({all_types}))
                         OPTIONAL {{ ?subject {self.relationships_filter[3]} ?isAggregatedSensor }}
+                        OPTIONAL {{ ?subject {self.relationships_filter[4]} ?hasId . }}
                     }}
                     UNION
                     {{
@@ -141,12 +144,15 @@ class EntityExtractor(IIoTPlatformExtractor):
             relation = self._binding_value(row, "relation")
             obj = self._binding_value(row, "object")
             is_aggregated = self._binding_value(row, "isAggregatedSensor")
+            has_id = self._binding_value(row, "hasId")
 
             if subject and type_name and relation is None and obj is None:
                 if type_name.endswith("Device"):
                     self.devices.append({"subject": subject, "type": type_name})
                     if is_aggregated is not None:
                         self.devices[-1]["isAggregatedSensor"] = is_aggregated
+                    if has_id is not None:
+                        self.devices[-1]["hasId"] = has_id
                 elif type_name.endswith("Observation"):
                     self.observations.append({"subject": subject, "type": type_name})
                 else:

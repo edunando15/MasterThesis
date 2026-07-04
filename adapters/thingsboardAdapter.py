@@ -42,14 +42,17 @@ class ThingsboardAdapter(IAdapter):
             return str(response.json().get("id", {}).get("id", ""))
         return ""
 
-    def add_device(self, device: Any, description: str = None) -> str:
+    def add_device(self, device: Any, description: str = None, has_id:str = None) -> str:
         payload = {
             "name": getattr(device, "name", str(device)),
             "type": Type.DEVICE.value,
         }
-        if description is not None:
+        if description is not None or has_id is not None:
+            desc = description or ""
+            if has_id is not None:
+                desc += f"; original_id: {has_id}"
             payload["additionalInfo"] = {
-                "description": description
+                "description": desc
             }
 
         response = requests.post(
