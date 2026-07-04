@@ -3,7 +3,7 @@ from adapters.thingsboardAdapter import ThingsboardAdapter
 import pandas as pd
 import os
 import random
-
+import time
 
 def generate_telemetry_values(device_name: str) -> dict:
     name_lower = device_name.lower()
@@ -54,15 +54,17 @@ devices = csv_file[csv_file['type'] == 'DEVICE']
 adapter = ThingsboardAdapter(platform_url=tb_url)
 adapter.authenticate(user=thingsboard_username, password=thingsboard_password)
 
-for index, device in devices.iterrows():
-    device_id = device['id']
-    device_name = device['entity_uri']
+while True:
+    for index, device in devices.iterrows():
+        device_id = device['id']
+        device_name = device['entity_uri']
 
-    mock_values = generate_telemetry_values(device_name)
+        mock_values = generate_telemetry_values(device_name)
 
-    telemetry = {
-        "ts": int(pd.Timestamp.now().timestamp() * 1000),
-        "values": mock_values
-    }
+        telemetry = {
+            "ts": int(pd.Timestamp.now().timestamp() * 1000),
+            "values": mock_values
+        }
 
-    success = adapter.upload_telemetry(device_id, telemetry)
+        success = adapter.upload_telemetry(device_id, telemetry)
+    time.sleep(10)
