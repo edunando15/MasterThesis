@@ -1,7 +1,8 @@
 Prefices
 {
     rdf : http://www.w3.org/1999/02/22-rdf-syntax-ns#
-    bop : https://w3id.org/bop#
+    xsd : http://www.w3.org/2001/XMLSchema#
+	bop : https://w3id.org/bop#
     bot : https://w3id.org/bot#
     sosa : http://www.w3.org/ns/sosa/
     iotpo : https://fhnw.ch/iotpo#
@@ -31,19 +32,45 @@ Rules
     multiSensor <bop:hasSubSensor> subSensor
     -------------------------------
     multiSensor <iotpo:hasSubDevice> subSensor
-	
+
 	Id: S4_Zone_to_Asset
 	zone <rdf:type> <bot:Zone>
 	-------------------------------
 	zone <rdf:type> <thingsboard:Asset>
-	
+
 	Id: S5_containsZone_to_containsAsset
 	zone1 <bot:containsZone> zone2
 	-------------------------------
 	zone1 <thingsboard:containsAsset> zone2
-	
+
 	Id: S6_containsElement_to_containsDevice
 	zone <bot:containsElement> device
 	-------------------------------
 	zone <thingsboard:containsDevice> device
+
+	Id: S7_PropertyState_to_Observation
+	s <rdf:type> <bop:Sensor>
+	s <bop:observes> prop
+	prop <bop:hasPropertyState> state
+	-------------------------------
+	state <rdf:type> <sosa:Observation>
+	state <sosa:madeBySensor> s
+	state <sosa:observedProperty> prop
+
+	Id: S9_map_sensor_guid_to_iotpo_device
+    s  <bot:hasGuid>  guid
+    -------------------------------
+    s  <iotpo:hasId>  guid
+
+	Id: S8_AggregatedObservation
+	parent <iotpo:hasSubDevice> child
+	parent <iotpo:isAggregatedSensor> "true"^^xsd:boolean
+	child <rdf:type> <bop:Sensor>
+	child <bop:observes> property
+	property <bop:hasPropertyState> state
+	-------------------------------
+	state <rdf:type> <sosa:Observation>
+	state <sosa:observedProperty> property
+	state <sosa:madeBySensor> parent
+
 }
