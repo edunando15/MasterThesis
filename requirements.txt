@@ -1,6 +1,6 @@
 pytest
 streamlit
-abc
 requests
 typing
-dotenv
+python-dotenv
+pandas

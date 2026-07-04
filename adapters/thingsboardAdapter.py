@@ -82,3 +82,11 @@ class ThingsboardAdapter(IAdapter):
         )
 
         return response.status_code in (200, 201)
+
+    def upload_telemetry(self, device_id: str, telemetry: dict) -> bool:
+        response = requests.post(
+            f"{self.platform_url}/api/plugins/telemetry/DEVICE/{device_id}/timeseries/ANY",
+            json=telemetry,
+            headers=self._headers(),
+        )
+        return response.status_code in (200, 201)

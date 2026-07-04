@@ -81,8 +81,9 @@ class ThingsboardDeployer(IDeployer):
                 )
 
 
-    def deploy(self, username: str, password: str):
+    def deploy(self, username: str, password: str) -> Dict[Any, Any]:
         self.adapter.authenticate(username, password)
         self._deploy_assets()
         self._deploy_devices()
         self._deploy_relationships()
+        return self._entity_registry

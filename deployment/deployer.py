@@ -18,5 +18,5 @@ class IDeployer(ABC):
         self.assets_ids = []
 
     @abstractmethod
-    def deploy(self, username: str, password: str):
+    def deploy(self, username: str, password: str) -> Dict[Any, Any]:
         raise NotImplementedError

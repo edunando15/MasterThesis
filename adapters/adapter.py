@@ -28,3 +28,7 @@ class IAdapter(ABC):
     @abstractmethod
     def add_relationship(self, parent: str, parent_type: Type, child: str, child_type: Type) -> bool:
         raise NotImplementedError
+
+    @abstractmethod
+    def upload_telemetry(self, device_id: str, telemetry: dict) -> bool:
+        raise NotImplementedError
