@@ -18,11 +18,11 @@ class IAdapter(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def add_zone(self, zone: Any, parent: Any = None) -> str:
+    def add_zone(self, zone: Any, **kwargs: Any) -> str:
         raise NotImplementedError
 
     @abstractmethod
-    def add_device(self, device: Any, description: str = None, has_id: str = None) -> str:
+    def add_device(self, device: Any, **kwargs: Any) -> str:
         raise NotImplementedError
 
     @abstractmethod

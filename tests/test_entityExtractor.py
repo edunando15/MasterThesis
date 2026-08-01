@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import patch
 import os
-from extractors.entityExtractor import EntityExtractor
+from extractors.thingsboardExtractor import ThingsboardExtractor
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -11,7 +11,7 @@ graphdb_repository = os.getenv("GRAPHDB_REPOSITORY")
 class EntityExtractorTest(unittest.TestCase):
 
     def test_extract_returns_expected_structure(self):
-        extractor = EntityExtractor(graphdb_url, graphdb_repository)
+        extractor = ThingsboardExtractor(graphdb_url, graphdb_repository)
         fake_response = {
             "results": {
                 "bindings": [

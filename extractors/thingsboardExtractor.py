@@ -6,12 +6,12 @@ from extractors.iotPlatformExtractor import IIoTPlatformExtractor
 
 load_dotenv()
 
-class EntityExtractor(IIoTPlatformExtractor):
+class ThingsboardExtractor(IIoTPlatformExtractor):
 
     def __init__(self, graphdb_url: str, repository: str):
         super().__init__(graphdb_url, repository)
         self.zone_types = ["thingsboard:Asset"]
-        self.device_types = ["iotpo:Device"]
+        self.device_types = ["thingsboard:Device"]
         self.observation_types = ["sosa:Observation"]
         self.structural_relations = ["thingsboard:containsAsset"]
 

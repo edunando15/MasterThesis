@@ -4,4 +4,5 @@ class Type(Enum):
     ASSET = "ASSET"
     DEVICE = "DEVICE"
     CONTAINS = "Contains"
+    BUILDING_ASSET = "BuildingAsset"
 

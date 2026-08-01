@@ -25,13 +25,13 @@ class ThingsboardAdapter(IAdapter):
             "Content-Type": "application/json",
         }
 
-    def add_zone(self, zone: Any, parent: Any = None) -> str:
+    def add_zone(self, zone: Any, **kwargs: Any) -> str:
         payload = {
             "name": getattr(zone, "name", str(zone)),
             "type": Type.ASSET.value,
         }
-        if parent is not None:
-            payload["parentId"] = parent
+        if kwargs.get("parent") is not None:
+            payload["parentId"] = kwargs.get("parent")
 
         response = requests.post(
             f"{self.platform_url}/api/asset",
@@ -42,15 +42,15 @@ class ThingsboardAdapter(IAdapter):
             return str(response.json().get("id", {}).get("id", ""))
         return ""
 
-    def add_device(self, device: Any, description: str = None, has_id:str = None) -> str:
+    def add_device(self, device: Any, **kwargs: Any) -> str:
         payload = {
             "name": getattr(device, "name", str(device)),
             "type": Type.DEVICE.value,
         }
-        if description is not None or has_id is not None:
-            desc = description or ""
-            if has_id is not None:
-                desc += f"; original_id: {has_id}"
+        if kwargs.get("description") is not None or kwargs.get("has_id") is not None:
+            desc = kwargs.get("description") or ""
+            if kwargs.get("has_id") is not None:
+                desc += f"; original_id: {kwargs.get('has_id')}"
             payload["additionalInfo"] = {
                 "description": desc
             }

@@ -1,7 +1,7 @@
 import unittest
 import os
 from adapters.thingsboardAdapter import ThingsboardAdapter as ThingsboardAdapter
-from extractors.entityExtractor import EntityExtractor
+from extractors.thingsboardExtractor import ThingsboardExtractor
 from deployment.thingsboardDeployer import ThingsboardDeployer
 from dotenv import load_dotenv
 
@@ -12,7 +12,7 @@ thingsboard_username = os.getenv("THINGSBOARD_USERNAME")
 thingsboard_password = os.getenv("THINGSBOARD_PASSWORD")
 tb_url = os.getenv("THINGSBOARD_URL")
 
-extractor = EntityExtractor(graphdb_url, graphdb_repository)
+extractor = ThingsboardExtractor(graphdb_url, graphdb_repository)
 extracted_entities = extractor.extract_entities_relationships()
 
 adapter = ThingsboardAdapter(tb_url)

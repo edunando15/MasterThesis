@@ -1,0 +1,88 @@
+@prefix : <https://fhnw.ch/openremote#> .
+@prefix openremote: <https://fhnw.ch/openremote#> .
+@prefix bop: <https://w3id.org/bop#> .
+@prefix bot: <https://w3id.org/bot#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix iotpo: <https://fhnw.ch/iotpo#> .
+@base <https://fhnw.ch/openremote#> .
+
+<https://fhnw.ch/openremote> rdf:type owl:Ontology ;
+                             owl:imports <https://fhnw.ch/iotpo> ,
+                                         <https://w3id.org/bop> ,
+                                         <https://w3id.org/bot> .
+
+#################################################################
+#    Classes
+#################################################################
+
+###  https://fhnw.ch/openremote#Asset
+openremote:Asset rdf:type owl:Class ;
+                 rdfs:comment "Base class representing an OpenRemote Asset entity." ;
+                 rdfs:label "Asset" .
+
+###  https://fhnw.ch/openremote#BuildingAsset
+openremote:BuildingAsset rdf:type owl:Class ;
+                         rdfs:subClassOf openremote:Asset ,
+                                         bot:Zone ;
+                         rdfs:comment "An OpenRemote Asset classified as a spatial or building zone." ;
+                         rdfs:label "Building Asset" .
+
+###  https://fhnw.ch/openremote#SensorAsset
+openremote:SensorAsset rdf:type owl:Class ;
+                       rdfs:subClassOf openremote:Asset ,
+                                       iotpo:Device ;
+                       rdfs:comment "An OpenRemote Asset classified as a device or sensor." ;
+                       rdfs:label "Sensor Asset" .
+
+#################################################################
+#    Object Properties
+#################################################################
+
+###  https://fhnw.ch/openremote#containsBuildingAsset
+openremote:containsBuildingAsset rdf:type owl:ObjectProperty ;
+                         rdfs:domain openremote:BuildingAsset ;
+                         rdfs:range openremote:BuildingAsset ;
+                         rdfs:comment "A directed relation from a parent Asset to a child Asset." ;
+                         rdfs:label "contains building asset" .
+						 
+###  https://fhnw.ch/openremote#containsSensorAsset
+openremote:containsSensorAsset rdf:type owl:ObjectProperty ;
+                         rdfs:domain openremote:BuildingAsset ;
+                         rdfs:range openremote:SensorAsset ;
+                         rdfs:comment "A directed relation from a parent Asset to a child Asset." ;
+                         rdfs:label "contains sensor asset" .					 
+
+#################################################################
+#    Data properties
+#################################################################
+
+###  https://fhnw.ch/openremote#hasDatapoint
+openremote:hasDatapoint rdf:type owl:DatatypeProperty ;
+                        rdfs:domain openremote:SensorAsset ;
+                        rdfs:range xsd:string ;
+                        rdfs:comment "The reference linking to the specific sensor attribute or datapoint." ;
+                        rdfs:label "datapoint" .
+
+###  https://fhnw.ch/openremote#hasId
+openremote:hasId rdf:type owl:DatatypeProperty ;
+                 rdfs:subPropertyOf iotpo:hasId ;
+                 rdfs:domain openremote:Asset ;
+                 rdfs:range xsd:string ;
+                 rdfs:label "id" .
+
+###  https://fhnw.ch/openremote#hasName
+openremote:hasName rdf:type owl:DatatypeProperty ;
+                   rdfs:domain openremote:Asset ;
+                   rdfs:range xsd:string ;
+                   rdfs:label "name" .
+				   
+###  https://fhnw.ch/openremote#hasType
+openremote:hasType rdf:type owl:DatatypeProperty ;
+                   rdfs:domain openremote:Asset ;
+                   rdfs:range xsd:string ;
+                   rdfs:comment "The specific type or category of the asset." ;
+                   rdfs:label "type" .
