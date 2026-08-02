@@ -9,23 +9,6 @@ class ThingsboardDeployer(IDeployer):
         super().__init__(adapter, extracted_entities)
         self._entity_registry = {}
 
-    def _is_aggregated_sensor(self, device: Dict[str, Any]) -> bool:
-        is_aggregated = device.get("isAggregatedSensor", "")
-        return str(is_aggregated).strip().lower() == "true"
-
-    def _compute_ignored_sub_sensors(self) -> set[str]:
-        device_map = {d["subject"]: d for d in self.devices if "subject" in d}
-        ignored = set()
-        for rel in self.relationships:
-            rel_name = rel.get("relation", "")
-            if "hasSubSensor" in rel_name:
-                parent_uri = rel.get("subject")
-                child_uri = rel.get("object")
-                parent = device_map.get(parent_uri)
-                if parent and self._is_aggregated_sensor(parent):
-                    ignored.add(child_uri)
-        return ignored
-
     def _find_observation_for_device(self, device_uri: str) -> Optional[str]:
         observations = []
         for rel in self.relationships:
@@ -60,7 +43,7 @@ class ThingsboardDeployer(IDeployer):
             if observation_uri:
                 description = observation_uri
 
-            tb_id = self.adapter.add_device(uri, description, has_id)
+            tb_id = self.adapter.add_device(uri, description=description, has_id=has_id)
             if tb_id:
                 self.devices_ids.append(tb_id)
                 self._entity_registry[uri] = {"id": tb_id, "type": Type.DEVICE}

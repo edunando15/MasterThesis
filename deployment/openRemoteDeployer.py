@@ -1,30 +1,12 @@
 from adapters.adapter import IAdapter
 from .deployer import IDeployer
-from adapters.openRemoteAdapter import OpenRemoteAdapter
-from typing import Any, Dict, Optional
+from typing import Any, Dict
 from adapters.type import Type
 
 class OpenRemoteDeployer(IDeployer):
     def __init__(self, adapter: IAdapter, extracted_entities: Dict[str, Any]):
         super().__init__(adapter, extracted_entities)
         self._entity_registry = {}
-
-    def _is_aggregated_sensor(self, device: Dict[str, Any]) -> bool:
-        is_aggregated = device.get("isAggregatedSensor", "")
-        return str(is_aggregated).strip().lower() == "true"
-
-    def _compute_ignored_sub_sensors(self) -> set[str]:
-        device_map = {d["subject"]: d for d in self.devices if "subject" in d}
-        ignored = set()
-        for rel in self.relationships:
-            rel_name = rel.get("relation", "")
-            if "hasSubSensor" in rel_name:
-                parent_uri = rel.get("subject")
-                child_uri = rel.get("object")
-                parent = device_map.get(parent_uri)
-                if parent and self._is_aggregated_sensor(parent):
-                    ignored.add(child_uri)
-        return ignored
 
     def _find_observation_for_device(self, device_uri: str) -> list[str]:
         observations = set()

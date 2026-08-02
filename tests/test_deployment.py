@@ -12,15 +12,12 @@ thingsboard_username = os.getenv("THINGSBOARD_USERNAME")
 thingsboard_password = os.getenv("THINGSBOARD_PASSWORD")
 tb_url = os.getenv("THINGSBOARD_URL")
 
-extractor = ThingsboardExtractor(graphdb_url, graphdb_repository)
-extracted_entities = extractor.extract_entities_relationships()
-
-adapter = ThingsboardAdapter(tb_url)
-deployer = ThingsboardDeployer(adapter, extracted_entities)
-
 class ThingsboardDeployerTest(unittest.TestCase):
 
     def test_deploy(self):
+        extractor = ThingsboardExtractor(graphdb_url, graphdb_repository)
+        extracted_entities = extractor.extract_entities_relationships()
+
+        adapter = ThingsboardAdapter(tb_url)
+        deployer = ThingsboardDeployer(adapter, extracted_entities)
         deployer.deploy(thingsboard_username, thingsboard_password)
-        a = 0
-        pass
